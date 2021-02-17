@@ -1,0 +1,338 @@
+m4trace:acinclude.m4:65: -1- AC_DEFUN([AC_PYTHON_NUMPY], [ AC_MSG_CHECKING(for python and Numeric API)
+    AC_MSG_RESULT([])
+    ac_python_numpy_p=no
+    for pytry in python2.4 python2.3 python2.1 python2 python; do
+      AC_CHECK_PROGS(PYTHON_BIN, [$pytry])
+      if test x$PYTHON_BIN != x; then
+        ac_python_prefix=`$pytry -c 'import sys; print sys.prefix'`
+        [ac_python_version=`$pytry -c 'import sys; print sys.version[:3]'`]
+        ac_python_incdir=$ac_python_prefix/include/python$ac_python_version
+        AC_CHECK_HEADER([$ac_python_incdir/Python.h], 
+                        [ac_python_h_found=yes],
+                        [ac_python_h_found=no])
+       
+        if test x$ac_python_h_found = xyes; then
+          AC_CHECK_HEADER([$ac_python_incdir/Numeric/arrayobject.h], 
+                          [ac_numeric_arrayobject_h_found=yes],
+                          [ac_numeric_arrayobject_h_found=no],
+                          [[
+                            #include <$ac_python_incdir/Python.h>
+                          ]] )
+          if test x$ac_numeric_arrayobject_h_found = xyes; then
+            ac_python_numpy_p=yes
+            AC_ARG_WITH(py-site-packages-dir,
+              [  --with-py-site-packages-dir   installation dir for python packages],
+              [PYSITEPKGDIR="$withval"],
+              [PYSITEPKGDIR=])
+
+            if test x$PYSITEPKGDIR = x ; then
+              ac_python_exec_prefix=`$pytry -c 'import sys; print sys.exec_prefix'`
+              PYSITEPKGDIR=$ac_python_prefix/lib/python$ac_python_version/site-packages
+              if test -d $PYSITEPKGDIR; then
+                true
+              else
+                PYSITEPKGDIR=""
+                AC_MSG_WARN([Failed to find python site-packages dir])
+                AC_MSG_WARN([If you want to install PyMead pyton package,])
+  	      AC_MSG_WARN([specify location using --with-py-site-packages-dir])
+              fi
+            fi
+            break
+          fi
+        fi
+      fi
+    done
+    AC_MSG_RESULT([Results of Python and Numeric API check:])
+    if test x$ac_python_numpy_p = xyes; then
+      PYTHONINC=$ac_python_incdir
+      AC_MSG_RESULT([  Python binary having Numeric:  $PYTHON_BIN])
+      AC_MSG_RESULT([  Python include dir:            $PYTHONINC])
+      AC_SUBST(PYTHONINC)
+      AC_SUBST(PYSITEPKGDIR)
+    else
+      AC_MSG_WARN([   No Python with Numeric and API found])
+      AC_MSG_WARN([   Python interface will not be built])
+    fi
+  ])
+m4trace:acinclude.m4:79: -1- AC_DEFUN([AC_PROG_GUILE], [
+  AC_PATH_PROG(GUILE, guile)
+  if test -z "$GUILE" ; then
+    AC_MSG_ERROR([Guile interpreter not found, \$GUILE not set])
+  fi
+])
+m4trace:acinclude.m4:83: -1- AC_DEFUN([AC_GUILE_DIRS], [
+  AC_PROG_GUILE
+])
+m4trace:acinclude.m4:94: -1- AC_DEFUN([AC_PROG_SWIG], [
+  AC_PATH_PROG(SWIG, swig)
+  if test -z "$SWIG" ; then
+    echo WARNING: SWIG not found, \$SWIG not set
+    SWIG=
+  fi
+])
+m4trace:acinclude.m4:102: -1- AC_DEFUN([AC_PROG_PERL], [
+  AC_PATH_PROG(PERL, perl)
+  if test -z "$PERL" ; then
+    echo WARNING: PERL not found, \$PERL not set
+    PERL=
+  fi
+])
+m4trace:acinclude.m4:110: -1- AC_DEFUN([AC_PROG_PATCH], [
+  AC_PATH_PROG(PATCH, patch)
+  if test -z "$PATCH" ; then
+    echo WARNING: PATCH not found, \$PATCH not set
+    PATCH=
+  fi
+])
+m4trace:configure.in:4: -1- AC_INIT([MEAD], [2.2.9], [Don.Bashford@stjude.org], [mead])
+m4trace:configure.in:4: -1- m4_pattern_forbid([^_?A[CHUM]_])
+m4trace:configure.in:4: -1- m4_pattern_forbid([_AC_])
+m4trace:configure.in:4: -1- m4_pattern_forbid([^LIBOBJS$], [do not use LIBOBJS directly, use AC_LIBOBJ (see section `AC_LIBOBJ vs LIBOBJS'])
+m4trace:configure.in:4: -1- m4_pattern_allow([^AS_FLAGS$])
+m4trace:configure.in:4: -1- m4_pattern_forbid([^_?m4_])
+m4trace:configure.in:4: -1- m4_pattern_forbid([^dnl$])
+m4trace:configure.in:4: -1- m4_pattern_forbid([^_?AS_])
+m4trace:configure.in:4: -1- AC_SUBST([SHELL], [${CONFIG_SHELL-/bin/sh}])
+m4trace:configure.in:4: -1- AC_SUBST([PATH_SEPARATOR])
+m4trace:configure.in:4: -1- AC_SUBST([PACKAGE_NAME], [m4_ifdef([AC_PACKAGE_NAME],      ['AC_PACKAGE_NAME'])])
+m4trace:configure.in:4: -1- AC_SUBST([PACKAGE_TARNAME], [m4_ifdef([AC_PACKAGE_TARNAME],   ['AC_PACKAGE_TARNAME'])])
+m4trace:configure.in:4: -1- AC_SUBST([PACKAGE_VERSION], [m4_ifdef([AC_PACKAGE_VERSION],   ['AC_PACKAGE_VERSION'])])
+m4trace:configure.in:4: -1- AC_SUBST([PACKAGE_STRING], [m4_ifdef([AC_PACKAGE_STRING],    ['AC_PACKAGE_STRING'])])
+m4trace:configure.in:4: -1- AC_SUBST([PACKAGE_BUGREPORT], [m4_ifdef([AC_PACKAGE_BUGREPORT], ['AC_PACKAGE_BUGREPORT'])])
+m4trace:configure.in:4: -1- AC_SUBST([exec_prefix], [NONE])
+m4trace:configure.in:4: -1- AC_SUBST([prefix], [NONE])
+m4trace:configure.in:4: -1- AC_SUBST([program_transform_name], [s,x,x,])
+m4trace:configure.in:4: -1- AC_SUBST([bindir], ['${exec_prefix}/bin'])
+m4trace:configure.in:4: -1- AC_SUBST([sbindir], ['${exec_prefix}/sbin'])
+m4trace:configure.in:4: -1- AC_SUBST([libexecdir], ['${exec_prefix}/libexec'])
+m4trace:configure.in:4: -1- AC_SUBST([datadir], ['${prefix}/share'])
+m4trace:configure.in:4: -1- AC_SUBST([sysconfdir], ['${prefix}/etc'])
+m4trace:configure.in:4: -1- AC_SUBST([sharedstatedir], ['${prefix}/com'])
+m4trace:configure.in:4: -1- AC_SUBST([localstatedir], ['${prefix}/var'])
+m4trace:configure.in:4: -1- AC_SUBST([libdir], ['${exec_prefix}/lib'])
+m4trace:configure.in:4: -1- AC_SUBST([includedir], ['${prefix}/include'])
+m4trace:configure.in:4: -1- AC_SUBST([oldincludedir], ['/usr/include'])
+m4trace:configure.in:4: -1- AC_SUBST([infodir], ['${prefix}/info'])
+m4trace:configure.in:4: -1- AC_SUBST([mandir], ['${prefix}/man'])
+m4trace:configure.in:4: -1- AC_DEFINE_TRACE_LITERAL([PACKAGE_NAME])
+m4trace:configure.in:4: -1- AH_OUTPUT([PACKAGE_NAME], [/* Define to the full name of this package. */
+#undef PACKAGE_NAME])
+m4trace:configure.in:4: -1- AC_DEFINE_TRACE_LITERAL([PACKAGE_TARNAME])
+m4trace:configure.in:4: -1- AH_OUTPUT([PACKAGE_TARNAME], [/* Define to the one symbol short name of this package. */
+#undef PACKAGE_TARNAME])
+m4trace:configure.in:4: -1- AC_DEFINE_TRACE_LITERAL([PACKAGE_VERSION])
+m4trace:configure.in:4: -1- AH_OUTPUT([PACKAGE_VERSION], [/* Define to the version of this package. */
+#undef PACKAGE_VERSION])
+m4trace:configure.in:4: -1- AC_DEFINE_TRACE_LITERAL([PACKAGE_STRING])
+m4trace:configure.in:4: -1- AH_OUTPUT([PACKAGE_STRING], [/* Define to the full name and version of this package. */
+#undef PACKAGE_STRING])
+m4trace:configure.in:4: -1- AC_DEFINE_TRACE_LITERAL([PACKAGE_BUGREPORT])
+m4trace:configure.in:4: -1- AH_OUTPUT([PACKAGE_BUGREPORT], [/* Define to the address where bug reports for this package should be sent. */
+#undef PACKAGE_BUGREPORT])
+m4trace:configure.in:4: -1- AC_SUBST([build_alias])
+m4trace:configure.in:4: -1- AC_SUBST([host_alias])
+m4trace:configure.in:4: -1- AC_SUBST([target_alias])
+m4trace:configure.in:4: -1- AC_SUBST([DEFS])
+m4trace:configure.in:4: -1- AC_SUBST([ECHO_C])
+m4trace:configure.in:4: -1- AC_SUBST([ECHO_N])
+m4trace:configure.in:4: -1- AC_SUBST([ECHO_T])
+m4trace:configure.in:4: -1- AC_SUBST([LIBS])
+m4trace:configure.in:9: -1- AC_SUBST([MEADVERSION])
+m4trace:configure.in:17: -1- AC_PYTHON_NUMPY
+m4trace:configure.in:17: -1- AC_SUBST([PYTHON_BIN])
+m4trace:configure.in:17: -1- AC_PROG_CC
+m4trace:configure.in:17: -1- AC_SUBST([CC])
+m4trace:configure.in:17: -1- AC_SUBST([CFLAGS])
+m4trace:configure.in:17: -1- AC_SUBST([LDFLAGS])
+m4trace:configure.in:17: -1- AC_SUBST([CPPFLAGS])
+m4trace:configure.in:17: -1- AC_SUBST([CC])
+m4trace:configure.in:17: -1- AC_SUBST([ac_ct_CC])
+m4trace:configure.in:17: -1- AC_SUBST([CC])
+m4trace:configure.in:17: -1- AC_SUBST([ac_ct_CC])
+m4trace:configure.in:17: -1- AC_SUBST([CC])
+m4trace:configure.in:17: -1- AC_SUBST([CC])
+m4trace:configure.in:17: -1- AC_SUBST([ac_ct_CC])
+m4trace:configure.in:17: -1- AC_SUBST([EXEEXT], [$ac_cv_exeext])
+m4trace:configure.in:17: -1- AC_SUBST([OBJEXT], [$ac_cv_objext])
+m4trace:configure.in:17: -1- AC_HEADER_STDC
+m4trace:configure.in:17: -1- AC_PROG_CPP
+m4trace:configure.in:17: -1- AC_SUBST([CPP])
+m4trace:configure.in:17: -1- AC_SUBST([CPPFLAGS])
+m4trace:configure.in:17: -1- AC_SUBST([CPP])
+m4trace:configure.in:17: -1- AC_SUBST([EGREP])
+m4trace:configure.in:17: -1- AC_DEFINE_TRACE_LITERAL([STDC_HEADERS])
+m4trace:configure.in:17: -1- AH_OUTPUT([STDC_HEADERS], [/* Define to 1 if you have the ANSI C header files. */
+#undef STDC_HEADERS])
+m4trace:configure.in:17: -1- AC_CHECK_HEADERS([sys/types.h sys/stat.h stdlib.h string.h memory.h strings.h \
+		  inttypes.h stdint.h unistd.h], [], [], [$ac_includes_default])
+m4trace:configure.in:17: -1- AH_OUTPUT([HAVE_SYS_TYPES_H], [/* Define to 1 if you have the <sys/types.h> header file. */
+#undef HAVE_SYS_TYPES_H])
+m4trace:configure.in:17: -1- AH_OUTPUT([HAVE_SYS_STAT_H], [/* Define to 1 if you have the <sys/stat.h> header file. */
+#undef HAVE_SYS_STAT_H])
+m4trace:configure.in:17: -1- AH_OUTPUT([HAVE_STDLIB_H], [/* Define to 1 if you have the <stdlib.h> header file. */
+#undef HAVE_STDLIB_H])
+m4trace:configure.in:17: -1- AH_OUTPUT([HAVE_STRING_H], [/* Define to 1 if you have the <string.h> header file. */
+#undef HAVE_STRING_H])
+m4trace:configure.in:17: -1- AH_OUTPUT([HAVE_MEMORY_H], [/* Define to 1 if you have the <memory.h> header file. */
+#undef HAVE_MEMORY_H])
+m4trace:configure.in:17: -1- AH_OUTPUT([HAVE_STRINGS_H], [/* Define to 1 if you have the <strings.h> header file. */
+#undef HAVE_STRINGS_H])
+m4trace:configure.in:17: -1- AH_OUTPUT([HAVE_INTTYPES_H], [/* Define to 1 if you have the <inttypes.h> header file. */
+#undef HAVE_INTTYPES_H])
+m4trace:configure.in:17: -1- AH_OUTPUT([HAVE_STDINT_H], [/* Define to 1 if you have the <stdint.h> header file. */
+#undef HAVE_STDINT_H])
+m4trace:configure.in:17: -1- AH_OUTPUT([HAVE_UNISTD_H], [/* Define to 1 if you have the <unistd.h> header file. */
+#undef HAVE_UNISTD_H])
+m4trace:configure.in:17: -1- AC_SUBST([PYTHONINC])
+m4trace:configure.in:17: -1- AC_SUBST([PYSITEPKGDIR])
+m4trace:configure.in:41: -1- AC_PYTHON_NUMPY
+m4trace:configure.in:41: -1- AC_SUBST([PYTHON_BIN])
+m4trace:configure.in:41: -1- AC_SUBST([PYTHONINC])
+m4trace:configure.in:41: -1- AC_SUBST([PYSITEPKGDIR])
+m4trace:configure.in:41: -1- AC_PROG_SWIG
+m4trace:configure.in:41: -1- AC_SUBST([SWIG], [$ac_cv_path_SWIG])
+m4trace:configure.in:41: -1- AC_PROG_PERL
+m4trace:configure.in:41: -1- AC_SUBST([PERL], [$ac_cv_path_PERL])
+m4trace:configure.in:41: -1- AC_PROG_PATCH
+m4trace:configure.in:41: -1- AC_SUBST([PATCH], [$ac_cv_path_PATCH])
+m4trace:configure.in:45: -1- AC_PROG_CC
+m4trace:configure.in:45: -1- AC_SUBST([CC])
+m4trace:configure.in:45: -1- AC_SUBST([CFLAGS])
+m4trace:configure.in:45: -1- AC_SUBST([LDFLAGS])
+m4trace:configure.in:45: -1- AC_SUBST([CPPFLAGS])
+m4trace:configure.in:45: -1- AC_SUBST([CC])
+m4trace:configure.in:45: -1- AC_SUBST([ac_ct_CC])
+m4trace:configure.in:45: -1- AC_SUBST([CC])
+m4trace:configure.in:45: -1- AC_SUBST([ac_ct_CC])
+m4trace:configure.in:45: -1- AC_SUBST([CC])
+m4trace:configure.in:45: -1- AC_SUBST([CC])
+m4trace:configure.in:45: -1- AC_SUBST([ac_ct_CC])
+m4trace:configure.in:46: -1- AC_PROG_CXX
+m4trace:configure.in:46: -1- AC_SUBST([CXX])
+m4trace:configure.in:46: -1- AC_SUBST([CXXFLAGS])
+m4trace:configure.in:46: -1- AC_SUBST([LDFLAGS])
+m4trace:configure.in:46: -1- AC_SUBST([CPPFLAGS])
+m4trace:configure.in:46: -1- AC_SUBST([CXX])
+m4trace:configure.in:46: -1- AC_SUBST([ac_ct_CXX])
+m4trace:configure.in:47: -1- AC_PROG_RANLIB
+m4trace:configure.in:47: -1- AC_SUBST([RANLIB])
+m4trace:configure.in:47: -1- AC_SUBST([ac_ct_RANLIB])
+m4trace:configure.in:48: -1- AC_PROG_INSTALL
+m4trace:configure.in:48: -1- AC_SUBST([INSTALL_PROGRAM])
+m4trace:configure.in:48: -1- AC_SUBST([INSTALL_SCRIPT])
+m4trace:configure.in:48: -1- AC_SUBST([INSTALL_DATA])
+m4trace:configure.in:50: -1- _m4_warn([obsolete], [The macro `AC_LANG_CPLUSPLUS' is obsolete.
+You should run autoupdate.], [autoconf/c.m4:103: AC_LANG_CPLUSPLUS is expanded from...
+configure.in:50: the top level])
+m4trace:configure.in:57: -1- _m4_warn([obsolete], [The macro `AC_LANG_SAVE' is obsolete.
+You should run autoupdate.], [autoconf/lang.m4:166: AC_LANG_SAVE is expanded from...
+configure.in:57: the top level])
+m4trace:configure.in:57: -1- _m4_warn([obsolete], [instead of using `AC_LANG', `AC_LANG_SAVE',
+and `AC_LANG_RESTORE', you should use `AC_LANG_PUSH' and `AC_LANG_POP'.], [autoconf/lang.m4:166: AC_LANG_SAVE is expanded from...
+configure.in:57: the top level])
+m4trace:configure.in:60: -1- _m4_warn([obsolete], [The macro `AC_LANG_C' is obsolete.
+You should run autoupdate.], [autoconf/c.m4:71: AC_LANG_C is expanded from...
+configure.in:60: the top level])
+m4trace:configure.in:61: -1- AC_HEADER_STDC
+m4trace:configure.in:61: -1- AC_DEFINE_TRACE_LITERAL([STDC_HEADERS])
+m4trace:configure.in:61: -1- AH_OUTPUT([STDC_HEADERS], [/* Define to 1 if you have the ANSI C header files. */
+#undef STDC_HEADERS])
+m4trace:configure.in:62: -1- AC_CHECK_HEADERS([malloc.h strings.h])
+m4trace:configure.in:62: -1- AH_OUTPUT([HAVE_MALLOC_H], [/* Define to 1 if you have the <malloc.h> header file. */
+#undef HAVE_MALLOC_H])
+m4trace:configure.in:62: -1- AH_OUTPUT([HAVE_STRINGS_H], [/* Define to 1 if you have the <strings.h> header file. */
+#undef HAVE_STRINGS_H])
+m4trace:configure.in:63: -1- AC_TYPE_SIZE_T
+m4trace:configure.in:63: -1- AC_DEFINE_TRACE_LITERAL([size_t])
+m4trace:configure.in:63: -1- AH_OUTPUT([size_t], [/* Define to `unsigned\' if <sys/types.h> does not define. */
+#undef size_t])
+m4trace:configure.in:64: -1- _m4_warn([obsolete], [The macro `AC_LANG_RESTORE' is obsolete.
+You should run autoupdate.], [autoconf/lang.m4:172: AC_LANG_RESTORE is expanded from...
+configure.in:64: the top level])
+m4trace:configure.in:102: -1- AC_CHECK_HEADERS([stl_config.h], [stl_config='#include <stl_config.h>'], [stl_config=''])
+m4trace:configure.in:102: -1- AH_OUTPUT([HAVE_STL_CONFIG_H], [/* Define to 1 if you have the <stl_config.h> header file. */
+#undef HAVE_STL_CONFIG_H])
+m4trace:configure.in:102: -1- AC_SUBST([CXXCPP])
+m4trace:configure.in:102: -1- AC_SUBST([CPPFLAGS])
+m4trace:configure.in:102: -1- AC_SUBST([CXXCPP])
+m4trace:configure.in:108: -1- _m4_warn([obsolete], [The macro `AC_TRY_COMPILE' is obsolete.
+You should run autoupdate.], [autoconf/general.m4:2180: AC_TRY_COMPILE is expanded from...
+configure.in:108: the top level])
+m4trace:configure.in:128: -1- AC_CANONICAL_HOST
+m4trace:configure.in:128: -1- AC_SUBST([build], [$ac_cv_build])
+m4trace:configure.in:128: -1- AC_SUBST([build_cpu], [`echo $ac_cv_build | sed 's/^\([[^-]]*\)-\([[^-]]*\)-\(.*\)$/\1/'`])
+m4trace:configure.in:128: -1- AC_SUBST([build_vendor], [`echo $ac_cv_build | sed 's/^\([[^-]]*\)-\([[^-]]*\)-\(.*\)$/\2/'`])
+m4trace:configure.in:128: -1- AC_SUBST([build_os], [`echo $ac_cv_build | sed 's/^\([[^-]]*\)-\([[^-]]*\)-\(.*\)$/\3/'`])
+m4trace:configure.in:128: -1- AC_SUBST([host], [$ac_cv_host])
+m4trace:configure.in:128: -1- AC_SUBST([host_cpu], [`echo $ac_cv_host | sed 's/^\([[^-]]*\)-\([[^-]]*\)-\(.*\)$/\1/'`])
+m4trace:configure.in:128: -1- AC_SUBST([host_vendor], [`echo $ac_cv_host | sed 's/^\([[^-]]*\)-\([[^-]]*\)-\(.*\)$/\2/'`])
+m4trace:configure.in:128: -1- AC_SUBST([host_os], [`echo $ac_cv_host | sed 's/^\([[^-]]*\)-\([[^-]]*\)-\(.*\)$/\3/'`])
+m4trace:configure.in:195: -1- AC_SUBST([CXX_DEBUGFLAGS])
+m4trace:configure.in:196: -1- AC_SUBST([CXX_OPTFLAGS])
+m4trace:configure.in:197: -1- AC_SUBST([CXX_NOOPTFLAGS])
+m4trace:configure.in:198: -1- AC_SUBST([REPO_FILES_IF_NEEDED])
+m4trace:configure.in:199: -1- AC_SUBST([CXX_AR_CMD])
+m4trace:configure.in:200: -1- AC_SUBST([CXX_SHAREDFLAGS])
+m4trace:configure.in:201: -1- AC_SUBST([CXX_DYNLIB_FLAGS])
+m4trace:configure.in:204: -1- _m4_warn([obsolete], [The macro `AC_LANG_SAVE' is obsolete.
+You should run autoupdate.], [autoconf/lang.m4:166: AC_LANG_SAVE is expanded from...
+configure.in:204: the top level])
+m4trace:configure.in:204: -1- _m4_warn([obsolete], [instead of using `AC_LANG', `AC_LANG_SAVE',
+and `AC_LANG_RESTORE', you should use `AC_LANG_PUSH' and `AC_LANG_POP'.], [autoconf/lang.m4:166: AC_LANG_SAVE is expanded from...
+configure.in:204: the top level])
+m4trace:configure.in:207: -1- _m4_warn([obsolete], [The macro `AC_LANG_C' is obsolete.
+You should run autoupdate.], [autoconf/c.m4:71: AC_LANG_C is expanded from...
+configure.in:207: the top level])
+m4trace:configure.in:208: -1- AC_FUNC_ALLOCA
+m4trace:configure.in:208: -1- AC_DEFINE_TRACE_LITERAL([HAVE_ALLOCA_H])
+m4trace:configure.in:208: -1- AH_OUTPUT([HAVE_ALLOCA_H], [/* Define to 1 if you have <alloca.h> and it should be used (not on Ultrix).
+   */
+#undef HAVE_ALLOCA_H])
+m4trace:configure.in:208: -1- AC_DEFINE_TRACE_LITERAL([HAVE_ALLOCA])
+m4trace:configure.in:208: -1- AH_OUTPUT([HAVE_ALLOCA], [/* Define to 1 if you have `alloca\', as a function or macro. */
+#undef HAVE_ALLOCA])
+m4trace:configure.in:208: -1- AC_LIBSOURCE([alloca.c])
+m4trace:configure.in:208: -1- AC_SUBST([ALLOCA], [alloca.$ac_objext])
+m4trace:configure.in:208: -1- AC_DEFINE_TRACE_LITERAL([C_ALLOCA])
+m4trace:configure.in:208: -1- AH_OUTPUT([C_ALLOCA], [/* Define to 1 if using `alloca.c\'. */
+#undef C_ALLOCA])
+m4trace:configure.in:208: -1- AC_DEFINE_TRACE_LITERAL([CRAY_STACKSEG_END])
+m4trace:configure.in:208: -1- AH_OUTPUT([CRAY_STACKSEG_END], [/* Define to one of `_getb67\', `GETB67\', `getb67\' for Cray-2 and Cray-YMP
+   systems. This function is required for `alloca.c\' support on those systems.
+   */
+#undef CRAY_STACKSEG_END])
+m4trace:configure.in:208: -1- AH_OUTPUT([STACK_DIRECTION], [/* If using the C implementation of alloca, define if you know the
+   direction of stack growth for your system; otherwise it will be
+   automatically deduced at run-time.
+	STACK_DIRECTION > 0 => grows toward higher addresses
+	STACK_DIRECTION < 0 => grows toward lower addresses
+	STACK_DIRECTION = 0 => direction of growth unknown */
+@%:@undef STACK_DIRECTION])
+m4trace:configure.in:208: -1- AC_DEFINE_TRACE_LITERAL([STACK_DIRECTION])
+m4trace:configure.in:210: -1- AC_SUBST([REGEX_LIB])
+m4trace:configure.in:211: -1- AC_SUBST([REGEX_CPP])
+m4trace:configure.in:212: -1- _m4_warn([obsolete], [The macro `AC_LANG_RESTORE' is obsolete.
+You should run autoupdate.], [autoconf/lang.m4:172: AC_LANG_RESTORE is expanded from...
+configure.in:212: the top level])
+m4trace:configure.in:216: -1- AC_SUBST([CXX_DEFS])
+m4trace:configure.in:258: -1- AC_CONFIG_FILES([apps/Makefile
+	  apps/Makefile.common
+	  apps/mulsidecomp/Makefile
+	  apps/multiflex/Makefile
+	  apps/pair_interactions/Makefile
+	  apps/potential/Makefile
+	  apps/potscan/Makefile
+	  apps/redti/Makefile
+	  apps/sav-driver/Makefile
+	  apps/solinprot/Makefile
+	  apps/sphericalHarmonic_test/Makefile
+	  apps/solvate/Makefile
+	  apps/libmso/Makefile
+	  libmead/Makefile
+	  libMEADsolvate/Makefile
+	  librx/Makefile
+	  testing/Makefile
+	  swig/Makefile
+	  Makefile])
+m4trace:configure.in:267: -1- AC_SUBST([LIB@&t@OBJS], [$ac_libobjs])
+m4trace:configure.in:267: -1- AC_SUBST([LTLIBOBJS], [$ac_ltlibobjs])
